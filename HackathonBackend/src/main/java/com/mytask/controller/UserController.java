@@ -13,5 +13,5 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Define endpoints to interact with the UserService
+    
 }
