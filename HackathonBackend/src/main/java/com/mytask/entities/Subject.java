@@ -1,12 +1,9 @@
 package com.mytask.entities;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,21 +18,14 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "student_marks")
-public class StudentMarks {
+@Table(name = "subjects")
+public class Subject {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long sub_id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "student_id")
-	private Student student;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subject_id")
-	private Subject subject;
-
+	private String subject;
 	private int TheoryMarks;
 	private int LabMarks;
 	private int IA_1Marks;
