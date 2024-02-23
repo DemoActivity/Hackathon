@@ -1,13 +1,13 @@
-package com.example.demo;
+package com.mytask;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HackathonBackendApplication {
+public class HBApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HackathonBackendApplication.class, args);
+		SpringApplication.run(HBApplication.class, args);
 	}
 
 }
