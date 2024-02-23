@@ -2,6 +2,7 @@ package com.mytask.entities;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class EvaluationSchedule {
 	private Subject subject;
 	private String evaluationType;
 	private LocalDate validTill;
-	private String group;
+	
+	private String grup;
 	private Long userId;
 }
