@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mytask.entities.Course;
 import com.mytask.entities.CourseSubject;
+import com.mytask.entities.Subject;
 import com.mytask.repo.CourseRepo;
 import com.mytask.repo.CourseSubjectRepo;
 
@@ -17,7 +18,9 @@ public class CourseSubjectService {
 	@Autowired
 	private CourseSubjectRepo courseSubjectRepo;
 
-	public List<CourseSubject> getCourseSubjectsByCourseId(Long courseId) {
-		return courseSubjectRepo.findByCourseCourseId(courseId);
+//	public List<CourseSubject> getCourseSubjectsByCourseId(String course) {
+//		return courseSubjectRepo.findByCourseCourseId(course);
+		public List<Subject> getCourseSubjectsByCourseId(Long courseId) {
+			return courseSubjectRepo.findByCourseCourseId(courseId);
 	}
 }
