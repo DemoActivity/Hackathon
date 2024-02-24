@@ -1,16 +1,28 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./AssignTask.css"; // Import CSS file for custom styles
 
 const AssignTask = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [courseSubjects, setCourseSubjects] = useState([]);
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [loadingGroups, setLoadingGroups] = useState(false);
+  const [staffNames, setStaffNames] = useState([]);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [selectedExamType, setSelectedExamType] = useState(null);
+  const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
+  const [tillDate, setTillDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null); // State to store selected date
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("http://localhost:8080/courses");
-
-        console.log("Response Data: ", response.data);
         setCourses(response.data);
         setLoading(false);
       } catch (error) {
@@ -20,20 +32,244 @@ const AssignTask = () => {
     };
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      if (selectedSubjectId) {
+        try {
+          setLoadingGroups(true);
+          const response = await axios.get(
+            "http://localhost:8080/students/getAllGroups"
+          );
+
+          setGroups(response.data);
+          setLoadingGroups(false);
+          console.log("Groups:", response.data);
+        } catch (error) {
+          console.log(error);
+          setLoadingGroups(false);
+        }
+      }
+    };
+    fetchGroups();
+  }, [selectedSubjectId]);
+
+  useEffect(() => {
+    const fetchCourseSubjects = async () => {
+      if (selectedCourseId) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/courseSubject/by-course?courseId=${selectedCourseId}`
+          );
+          setCourseSubjects(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchCourseSubjects();
+  }, [selectedCourseId]);
+
+  useEffect(() => {
+    const fetchStaffNames = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/users/allStaff"
+        );
+        setStaffNames(response.data);
+        console.log("Staff Names:", response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchStaffNames();
+  }, []);
+
+  const handleCourseChange = (event) => {
+    setSelectedCourseId(event.target.value);
+    // Reset selected subject, groups, staff, and exam type when a new course is selected
+    setSelectedSubjectId(null);
+    setSelectedStaff(null);
+    setSelectedExamType(null);
+    setGroups([]);
+  };
+
+  const handleSubjectChange = (event) => {
+    setSelectedSubjectId(event.target.value);
+    // Reset selected groups, staff, and exam type when a new subject is selected
+    setSelectedStaff(null);
+    setSelectedExamType(null);
+  };
+
+  const handleStaffChange = (event) => {
+    setSelectedStaff(event.target.value);
+  };
+
+  const handleExamTypeChange = (event) => {
+    setSelectedExamType(event.target.value);
+  };
+
+  const handleFromDateClick = () => {
+    const fromDate = new Date().toLocaleDateString();
+    console.log("From Date:", fromDate);
+  };
+
+  const handleTillDateClick = () => {
+    const tillDate = new Date().toLocaleDateString();
+    setTillDate(new Date().toLocaleDateString());
+    console.log("Till Date:", tillDate);
+  };
+  const handleDateSelect = (date) => {
+    setSelectedDate(date); // Update the selected date state
+  };
+
   return (
-    <div>
-      <label htmlFor="selectCourse">Select Course:</label>
-      <select id="selectCourse" name="selectCourse">
-        {loading ? (
-          <option value="">Loading...</option>
-        ) : (
-          courses.map((course) => (
-            <option key={course.c_id} value={course.c_name}>
-              {course.c_name}
+    <div className="container mt-5">
+      <div className="form-group">
+        <label htmlFor="selectCourse">Select Course:</label>
+        <select
+          id="selectCourse"
+          name="selectCourse"
+          className="form-control"
+          onChange={handleCourseChange}
+        >
+          <option value="">Select Course</option>
+          {loading ? (
+            <option value="Select Course">Loading...</option>
+          ) : (
+            courses.map((course) => (
+              <option key={course.courseId} value={course.courseId}>
+                {course.c_name}
+              </option>
+            ))
+          )}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="selectSubject">Select Subject:</label>
+        <select
+          id="selectSubject"
+          name="selectSubject"
+          className="form-control"
+          onChange={handleSubjectChange}
+          disabled={!selectedCourseId}
+        >
+          <option value="">Select Subject</option>
+          {courseSubjects &&
+            courseSubjects.length > 0 &&
+            courseSubjects.map((subject) => (
+              <option key={subject.sub_id} value={subject.sub_id}>
+                {subject.subject}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="selectGroup">Select Group:</label>
+        <select
+          id="selectGroup"
+          name="selectGroup"
+          className="form-control"
+          disabled={!selectedSubjectId}
+        >
+          <option value="" disabled={!selectedSubjectId}>
+            {selectedSubjectId ? "Select Group" : "Select Subject first"}
+          </option>
+          {loadingGroups ? (
+            <option value="" disabled>
+              Loading...
             </option>
-          ))
-        )}
-      </select>
+          ) : (
+            groups &&
+            groups.length > 0 &&
+            groups.map((group, index) => (
+              <option key={index} value={group}>
+                {group}
+              </option>
+            ))
+          )}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="selectStaff">Select Staff:</label>
+        <select
+          id="selectStaff"
+          name="selectStaff"
+          className="form-control"
+          onChange={handleStaffChange}
+          disabled={!selectedSubjectId}
+        >
+          <option value="">Select Staff</option>
+          {staffNames &&
+            staffNames.length > 0 &&
+            staffNames.map((staff) => (
+              <option key={staff.id} value={staff.staffName}>
+                {staff.staffName}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label>Select Exam Type:</label>
+        <div>
+          <input
+            type="radio"
+            id="internal-exam-1"
+            name="examType"
+            value="Internal Exam-1"
+            onChange={handleExamTypeChange}
+          />
+          <label htmlFor="internal-exam-1">Internal Exam-1</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="internal-exam-2"
+            name="examType"
+            value="Internal Exam-2"
+            onChange={handleExamTypeChange}
+          />
+          <label htmlFor="internal-exam-2">Internal Exam-2</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="lab-exam"
+            name="examType"
+            value="Lab Exam"
+            onChange={handleExamTypeChange}
+          />
+          <label htmlFor="lab-exam">Lab Exam</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="theory-exam"
+            name="examType"
+            value="Theory"
+            onChange={handleExamTypeChange}
+          />
+          <label htmlFor="theory-exam">Theory</label>
+        </div>
+      </div>
+      <div className="form-group">
+        <div className="button-container">
+          <button className="btn btn-primary" onClick={handleFromDateClick}>
+            From Date: {fromDate}
+          </button>
+          <button className="btn btn-primary" onClick={handleTillDateClick}>
+            <DatePicker
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+              onChange={handleDateSelect}
+              value="Till Date"
+              minDate={new Date()}
+              placeholderText="Till Date"
+            />
+          </button>
+        </div>
+      </div>
+      <button className="btn btn-primary">Assign Task</button>
     </div>
   );
 };
