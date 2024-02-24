@@ -22,4 +22,9 @@ public class UserService {
     	System.out.println("In UserService="+roleId);
     	return userRepo.findByRoleRoleId(roleId);
     }
+    
+    public List<Users> getAllStaff(Long staffRoleId) {
+    	System.out.println("In UserService =getAllStaff");
+    	return userRepo.findByRoleRoleId(staffRoleId);
+    }
 }

@@ -23,4 +23,11 @@ public class UserController {
     	System.out.println("In UserController"+roleId);
         return userService.getUsersByRoleId(roleId);
     }
+    
+    @GetMapping("/allStaff")
+    public List<Users> getAllStaff() {
+    	System.out.println("In UserController");
+    	Long staffRoleId=(long) 3;
+        return userService.getAllStaff(staffRoleId);
+    }
 }
