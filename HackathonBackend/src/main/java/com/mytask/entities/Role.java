@@ -2,6 +2,9 @@ package com.mytask.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,11 +27,10 @@ import lombok.ToString;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long r_id;
-    private String r_name;
-
+    private Long roleId;
+    private String rName;
+    @JsonBackReference
     @OneToMany(mappedBy = "role")
     private List<Users> users;
 
-    // Constructors, getters, and setters
 }
