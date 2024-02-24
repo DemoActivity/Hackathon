@@ -18,6 +18,36 @@ const AssignTask = () => {
   const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
   const [tillDate, setTillDate] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null); // State to store selected date
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
+  // Function to handle the form submission
+  const handleAssignTask = async () => {
+    try {
+      // Construct the data object to send
+      const data = {
+        subject: {
+          sub_id: selectedSubjectId,
+        },
+        evaluationType: selectedExamType,
+        fromDate: fromDate,
+        validTill: tillDate,
+        grup: selectedGroup,
+        userId: selectedStaff,
+      };
+
+      // Send POST request to the server
+      const response = await axios.post(
+        "http://localhost:8080/evaluation/evaluation-schedule",
+        data
+      );
+
+      // Handle success response
+      console.log("Data sent successfully:", response.data);
+    } catch (error) {
+      // Handle error
+      console.error("Error sending data:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -41,7 +71,9 @@ const AssignTask = () => {
           const response = await axios.get(
             "http://localhost:8080/students/getAllGroups"
           );
-
+          const selectedGroup = response.data.selectedGroup;
+          // Set the selected group state
+          setSelectedGroup(selectedGroup);
           setGroups(response.data);
           setLoadingGroups(false);
           console.log("Groups:", response.data);
@@ -269,7 +301,9 @@ const AssignTask = () => {
           </button>
         </div>
       </div>
-      <button className="btn btn-primary">Assign Task</button>
+      <button className="btn btn-primary" onClick={handleAssignTask}>
+        Assign Task
+      </button>
     </div>
   );
 };
