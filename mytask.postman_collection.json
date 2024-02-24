@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "d0b5f97b-5a23-4f05-817c-1fad5edb4ce2",
+		"name": "mytask",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23340391"
+	},
+	"item": [
+		{
+			"name": "GetAllCourses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllUsersBYRoleID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/by-role?roleId=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"by-role"
+					],
+					"query": [
+						{
+							"key": "roleId",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllSubjectIDByCourseID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courseSubject/by-course?courseId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courseSubject",
+						"by-course"
+					],
+					"query": [
+						{
+							"key": "courseId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllStaff",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/allStaff",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"allStaff"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllGroups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/students/getAllGroups",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"students",
+						"getAllGroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostEvaluationSchedule",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"subject\": {\n    \"sub_id\": 2\n  },\n  \"evaluationType\": \"Lab Exam\",\n  \"fromDate\": \"2024-02-25\",\n  \"validTill\": \"2024-03-31\",\n  \"grup\": \"D2\",\n  \"userId\": 24\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/evaluation/evaluation-schedule",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"evaluation",
+						"evaluation-schedule"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
