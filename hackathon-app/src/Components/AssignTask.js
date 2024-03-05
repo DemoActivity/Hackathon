@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./AssignTask.css"; // Import CSS file for custom styles
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AssignTask = () => {
   const [courses, setCourses] = useState([]);
@@ -50,6 +52,18 @@ const AssignTask = () => {
 
       // Handle success response
       console.log("Data sent successfully:", response.data);
+      // Display success message
+      toast.success("Task Assigned Successfully");
+      // Reset all fields
+      setSelectedCourseId(null);
+      setSelectedSubjectId(null);
+      setGroups([]);
+      setSelectedStaff(null);
+      setSelectedStaffId(null);
+      setSelectedExamType(null);
+      setFromDate(new Date());
+      setTillDate(null);
+      setSelectedGroup(null);
     } catch (error) {
       // Handle error
       console.error("Error sending data:", error);
