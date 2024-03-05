@@ -14,8 +14,9 @@ const AssignTask = () => {
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [staffNames, setStaffNames] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
+  const [selectedStaffId, setSelectedStaffId] = useState(null); // State to store selected staff id
   const [selectedExamType, setSelectedExamType] = useState(null);
-  const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
+  const [fromDate, setFromDate] = useState(new Date());
   const [tillDate, setTillDate] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null); // State to store selected date
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -23,18 +24,24 @@ const AssignTask = () => {
   // Function to handle the form submission
   const handleAssignTask = async () => {
     try {
+      // Format the dates
+      const formattedFromDate = fromDate.toLocaleDateString("en-CA");
+      const formattedTillDate = tillDate
+        ? tillDate.toLocaleDateString("en-CA")
+        : null;
+
       // Construct the data object to send
       const data = {
         subject: {
           sub_id: selectedSubjectId,
         },
         evaluationType: selectedExamType,
-        fromDate: fromDate,
-        validTill: tillDate,
+        fromDate: formattedFromDate,
+        validTill: formattedTillDate,
         grup: selectedGroup,
-        userId: selectedStaff,
+        userId: selectedStaffId,
       };
-
+      console.log("Data to Server: ", data);
       // Send POST request to the server
       const response = await axios.post(
         "http://localhost:8080/evaluation/evaluation-schedule",
@@ -132,9 +139,21 @@ const AssignTask = () => {
     setSelectedStaff(null);
     setSelectedExamType(null);
   };
+  const handleGroupChange = (event) => {
+    setSelectedGroup(event.target.value);
+  };
 
   const handleStaffChange = (event) => {
-    setSelectedStaff(event.target.value);
+    const selectedStaffName = event.target.value;
+    setSelectedStaff(selectedStaffName);
+
+    // Find the staff object with the selected name and extract its id
+    const selectedStaffObject = staffNames.find(
+      (staff) => staff.staffName === selectedStaffName
+    );
+    if (selectedStaffObject) {
+      setSelectedStaffId(selectedStaffObject.id); // Set selected staff id in state
+    }
   };
 
   const handleExamTypeChange = (event) => {
@@ -142,17 +161,20 @@ const AssignTask = () => {
   };
 
   const handleFromDateClick = () => {
-    const fromDate = new Date().toLocaleDateString();
+    const fromDate = new Date();
+    setFromDate(fromDate);
     console.log("From Date:", fromDate);
   };
-
+  const handleTillDateSelect = (date) => {
+    setTillDate(date);
+  };
   const handleTillDateClick = () => {
-    const tillDate = new Date().toLocaleDateString();
-    setTillDate(new Date().toLocaleDateString());
+    const tillDate = new Date();
+    setTillDate(tillDate);
     console.log("Till Date:", tillDate);
   };
   const handleDateSelect = (date) => {
-    setSelectedDate(date); // Update the selected date state
+    setTillDate(date);
   };
 
   return (
@@ -202,6 +224,7 @@ const AssignTask = () => {
           id="selectGroup"
           name="selectGroup"
           className="form-control"
+          onChange={handleGroupChange}
           disabled={!selectedSubjectId}
         >
           <option value="" disabled={!selectedSubjectId}>
@@ -287,13 +310,18 @@ const AssignTask = () => {
       <div className="form-group">
         <div className="button-container">
           <button className="btn btn-primary" onClick={handleFromDateClick}>
-            From Date: {fromDate}
+            From Date: {fromDate.toLocaleDateString("en-CA")}
           </button>
-          <button className="btn btn-primary" onClick={handleTillDateClick}>
+          <button className="btn btn-primary">
+            <span className="date-display">
+              {tillDate && (
+                <span>Till Date: {tillDate.toLocaleDateString("en-CA")}</span>
+              )}
+            </span>
             <DatePicker
-              selected={selectedDate}
-              onSelect={handleDateSelect}
-              onChange={handleDateSelect}
+              selected={tillDate}
+              onSelect={handleTillDateSelect}
+              onChange={handleTillDateSelect}
               value="Till Date"
               minDate={new Date()}
               placeholderText="Till Date"
